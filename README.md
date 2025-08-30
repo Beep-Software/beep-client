@@ -1,3 +1,6 @@
+https://img.shields.io/badge/Vue%20js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
+
+
 # beep-client
 
 This template should help get you started developing with Vue 3 in Vite.
