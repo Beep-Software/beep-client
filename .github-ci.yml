@@ -7,27 +7,60 @@ on:
   pull_request:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
+      #  Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      #  Setup Node.js
       - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
 
+      #  Install dependencies
       - name: Install dependencies
         run: npm ci
 
+      #  Build Vue app
       - name: Build Vue app
         run: npm run build
 
+      #  Upload artifact (optional)
       - name: Upload production build
         uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist/
+
+      #  Setup Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      #  Log in to GitHub Container Registry
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      #  Build and push Docker image
+      - name: Build and push Docker image
+        run: |
+          IMAGE=ghcr.io/${{ secrets.GHCR_USERNAME }}/beep-client
+          docker build -t $IMAGE:latest .
+          docker push $IMAGE:latest
+
+      #  Deploy to k3s
+      - name: Deploy to k3s
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+          kubectl apply -f k8s/deploy.yaml
+          kubectl rollout restart deployment beep-client
