@@ -62,5 +62,5 @@ jobs:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
         run: |
           echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
-          kubectl apply -f k8s/deploy.yaml
+          kubectl apply -f deploy.yaml
           kubectl rollout restart deployment beep-client
