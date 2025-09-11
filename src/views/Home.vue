@@ -14,7 +14,7 @@
                     <button class="btn primary">Get Started</button>
                     <button class="btn secondary">Learn More</button>
                 </div>
-                <label>Is this working?</label>
+                <label>WooHoo?</label>
             </div>
         </div>
     </main>
