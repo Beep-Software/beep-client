@@ -63,5 +63,5 @@ jobs:
         run: |
           mkdir -p /tmp/.kube
           echo "${{ secrets.KUBECONFIG }}" | base64 -d > /tmp/.kube/config
-          kubectl apply -f deploy.yaml
-          kubectl rollout restart deployment beep-client
+          kubectl apply --insecure-skip-tls-verify -f deploy.yaml
+          kubectl rollout restart deployment beep-client --insecure-skip-tls-verify
