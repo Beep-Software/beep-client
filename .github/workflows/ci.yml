@@ -59,10 +59,8 @@ jobs:
       # Deploy to k3s
       - name: Deploy to k3s
         env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+          KUBECONFIG: /tmp/kubeconfig
         run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > /tmp/kubeconfig
           kubectl apply -f deploy.yaml
           kubectl rollout restart deployment beep-client
-
