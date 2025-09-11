@@ -14,6 +14,7 @@
                     <button class="btn primary">Get Started</button>
                     <button class="btn secondary">Learn More</button>
                 </div>
+                <label>This is a test</label>
             </div>
         </div>
     </main>
