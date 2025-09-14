@@ -1,7 +1,7 @@
 <template>
     <main>
         <div class="left">
-            BEEP SOFTWARE
+            <img src="../../public/full_logo.png" alt="BEEP SOFTWARE" width="1000" height="1000" />
         </div>
         <div class="right">
             <div class="r-content">
