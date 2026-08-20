@@ -6,64 +6,64 @@ on:
       - main
   pull_request:
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: beep-software/beep-client
+
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+
+    permissions:
+      contents: read
+      packages: write
 
     steps:
-      # Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Setup Node.js
-      - name: Use Node.js 20
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: npm
 
-      # Install dependencies
       - name: Install dependencies
         run: npm ci
 
-      # Build Vue app
       - name: Build Vue app
         run: npm run build
 
-      # Upload artifact (optional)
-      - name: Upload production build
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist/
-
-      # Setup Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Log in to GitHub Container Registry
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ secrets.GHCR_USERNAME }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      # Build and push Docker image
       - name: Build and push Docker image
         run: |
           IMAGE=ghcr.io/${{ secrets.GHCR_USERNAME }}/beep-client
           TAG=${{ github.sha }}
-          docker build -t $IMAGE:$TAG .
-          docker push $IMAGE:$TAG
 
-      # Deploy to k3s
+          docker build \
+            -t $IMAGE:$TAG \
+            -t $IMAGE:latest \
+            .
+
+          docker push $IMAGE:$TAG
+          docker push $IMAGE:latest
 
       - name: Deploy to k3s
+        if: github.event_name == 'push'
         env:
-          KUBECONFIG: /tmp/.kube/config
+          KUBECONFIG: /etc/rancher/k3s/k3s.yaml
         run: |
-          mkdir -p /tmp/.kube
-          echo "${{ secrets.KUBECONFIG }}" | base64 -d > /tmp/.kube/config
-          kubectl set image deployment/beep-client beep-client=ghcr.io/${{ secrets.GHCR_USERNAME }}/beep-client:${{ github.sha }} --insecure-skip-tls-verify
-          kubectl rollout status deployment beep-client --insecure-skip-tls-verify
+          kubectl set image deployment/beep-client \
+            beep-client="${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA}"
+
+          kubectl rollout status deployment/beep-client \
+            --timeout=5m
