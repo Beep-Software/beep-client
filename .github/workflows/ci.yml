@@ -46,8 +46,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          IMAGE=ghcr.io/${{ secrets.GHCR_USERNAME }}/beep-client
-          TAG=${{ github.sha }}
+          IMAGE=${REGISTRY}/${IMAGE_NAME}
+          TAG=${GITHUB_SHA}
 
           docker build \
             -t $IMAGE:$TAG \
