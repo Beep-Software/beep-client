@@ -1,5 +1,5 @@
 <template>
-    <img src="../../../full_logo.png" alt="BEEP SOFTWARE" />
+    <img src="/full_logo.png" alt="BEEP SOFTWARE" />
 </template>
 
 <script setup lang="ts">
