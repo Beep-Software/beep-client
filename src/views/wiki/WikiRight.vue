@@ -7,6 +7,7 @@
             </div>
             <div class="actions">
                 <button v-if="!editing" type="button" class="btn secondary" @click="startEditing">Edit</button>
+                <button v-if="!editing" type="button" class="btn danger" @click="handleDelete">Delete</button>
                 <template v-else>
                     <button type="button" class="btn secondary" @click="cancelEditing">Cancel</button>
                     <button type="button" class="btn primary" @click="handleSave">Save</button>
@@ -19,7 +20,7 @@
         <div v-else class="markdown-body" v-html="renderedHtml"></div>
     </div>
     <div class="r-content" v-else>
-        <p>Select a document from the left to get started.</p>
+        <p>Select or create a document to get started.</p>
     </div>
 </template>
 
@@ -27,7 +28,7 @@
 import { computed, ref, watch } from 'vue'
 import DOMPurify from 'dompurify'
 import { marked } from 'marked'
-import { saveDoc, selectedDoc } from '@/stores/wikiStore'
+import { deleteDoc, saveDoc, selectedDoc } from '@/stores/wikiStore'
 import { notifyError, notifySuccess } from '@/stores/notificationStore'
 
 const editing = ref(false)
@@ -58,13 +59,29 @@ function cancelEditing() {
 
 async function handleSave() {
     if (!selectedDoc.value) return
-    const saved = await saveDoc(selectedDoc.value.id, draft.value)
+    let saved
+    try {
+        saved = await saveDoc(selectedDoc.value.id, draft.value)
+    } catch {
+        notifyError('Failed to save the document.')
+        return
+    }
     if (!saved) {
         notifyError('Failed to save the document.')
         return
     }
     notifySuccess('Document saved.')
     editing.value = false
+}
+
+async function handleDelete() {
+    if (!selectedDoc.value || !window.confirm(`Delete "${selectedDoc.value.title}"?`)) return
+    try {
+        await deleteDoc(selectedDoc.value.id)
+        notifySuccess('Document deleted.')
+    } catch {
+        notifyError('Failed to delete the document.')
+    }
 }
 </script>
 
@@ -126,6 +143,15 @@ async function handleSave() {
 
 .btn.secondary:hover {
     background: #ccc;
+}
+
+.btn.danger {
+    background: #f1d5d5;
+    color: #8b1e1e;
+}
+
+.btn.danger:hover {
+    background: #e8bcbc;
 }
 
 .editor {

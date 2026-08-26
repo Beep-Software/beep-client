@@ -2,8 +2,14 @@
     <div class="wiki-nav">
         <div class="wiki-nav-header">
             <h1>Wiki</h1>
-            <button class="new-btn" type="button" @click="handleCreate">+ New</button>
+            <button class="new-btn" type="button" :disabled="isLoadingDocs" @click="handleCreate">+ New</button>
         </div>
+        <div v-if="isLoadingDocs" class="loading-panel" role="status" aria-live="polite">
+            <div class="loading-label"><span>Loading documents</span><span>{{ loadProgress }}%</span></div>
+            <div class="progress-track" aria-hidden="true"><div class="progress-bar" :style="{ width: `${loadProgress}%` }"></div></div>
+            <div class="loading-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
+        <p v-else-if="loadError" class="load-error">{{ loadError }}</p>
         <ul class="doc-list">
             <li
                 v-for="doc in wikiDocs"
@@ -18,14 +24,18 @@
 </template>
 
 <script setup lang="ts">
-import { createDoc, selectDoc, selectedDoc, wikiDocs } from '@/stores/wikiStore'
-import { notifySuccess } from '@/stores/notificationStore'
+import { createDoc, isLoadingDocs, loadError, loadProgress, selectDoc, selectedDoc, wikiDocs } from '@/stores/wikiStore'
+import { notifyError, notifySuccess } from '@/stores/notificationStore'
 
 async function handleCreate() {
     const title = window.prompt('New document title')
     if (!title) return
-    await createDoc(title)
-    notifySuccess(`Created "${title}".`)
+    try {
+        await createDoc(title)
+        notifySuccess(`Created "${title}".`)
+    } catch {
+        notifyError('Failed to create the document.')
+    }
 }
 </script>
 
@@ -59,8 +69,68 @@ async function handleCreate() {
     transition: background-color 0.2s ease;
 }
 
-.new-btn:hover {
+.new-btn:hover:not(:disabled) {
     background: #ccc;
+}
+
+.new-btn:disabled {
+    cursor: wait;
+    opacity: 0.55;
+}
+
+.loading-panel {
+    padding: 0.75rem 0.85rem 1rem;
+    color: #d8d8d8;
+}
+
+.loading-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.progress-track {
+    height: 5px;
+    margin-top: 0.55rem;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #f7cf63, #fff);
+    transition: width 0.35s ease;
+}
+
+.loading-orbit {
+    display: flex;
+    gap: 0.3rem;
+    margin-top: 0.7rem;
+}
+
+.loading-orbit span {
+    width: 5px;
+    height: 5px;
+    background: #f7cf63;
+    border-radius: 50%;
+    animation: pulse 1s infinite ease-in-out;
+}
+
+.loading-orbit span:nth-child(2) { animation-delay: 0.15s; }
+.loading-orbit span:nth-child(3) { animation-delay: 0.3s; }
+
+.load-error {
+    padding: 0 0.85rem;
+    color: #f1a9a9;
+    font-size: 0.85rem;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(0.65); opacity: 0.45; }
+    50% { transform: scale(1.25); opacity: 1; }
 }
 
 .doc-list {
