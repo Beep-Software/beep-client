@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: beep-client
-        image: ghcr.io/devinbowen/beep-client:latest
+        image: ghcr.io/beep-software/beep-client:latest
         ports:
         - containerPort: 80
 
