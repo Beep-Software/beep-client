@@ -49,6 +49,13 @@ async function handleLogin() {
         const redirect = route.query.redirect
         const isSafeRedirect = typeof redirect === 'string' && redirect.startsWith('/') && !redirect.startsWith('//')
         router.push(isSafeRedirect ? redirect : '/admin')
+    } catch (error: any) {
+        if (error.response.data.error) {
+            notifyWarning(error.response.data.error)
+        } else {
+            notifyWarning('Failed to log in. Please check your credentials and try again.')
+            console.error(error)
+        }
     } finally {
         isLoggingIn.value = false
     }
