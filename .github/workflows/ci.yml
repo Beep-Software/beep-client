@@ -67,3 +67,9 @@ jobs:
 
           kubectl rollout status deployment/beep-client \
             --timeout=5m
+
+      - name: Clean Docker build cache
+        if: always()
+        run: |
+          docker builder prune --all --force
+          docker image prune --all --force
