@@ -27,4 +27,15 @@
     line-height: 1.6;
     color: #ccc;
 }
+
+@media (max-width: 640px) {
+    .intro {
+        max-width: 34rem;
+        padding: 0;
+    }
+
+    .intro h1 {
+        font-size: 2rem;
+    }
+}
 </style>

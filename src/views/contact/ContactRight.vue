@@ -105,5 +105,21 @@ function handleSubmit() {
 .btn.primary:hover {
     background: #333;
 }
+
+@media (max-width: 640px) {
+    .r-content {
+        max-width: none;
+    }
+
+    .contact-card {
+        gap: 1.25rem;
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+
+    .btn {
+        min-height: 2.75rem;
+    }
+}
 </style>
 

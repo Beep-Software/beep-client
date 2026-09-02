@@ -104,4 +104,18 @@ import { dismiss, notifications } from '@/stores/notificationStore'
 .toast-leave-active {
     transition: all 0.25s ease;
 }
+
+@media (max-width: 640px) {
+    .notification-manager {
+        top: 0.75rem;
+        right: 0.75rem;
+        left: 0.75rem;
+    }
+
+    .toast {
+        min-width: 0;
+        max-width: none;
+        width: 100%;
+    }
+}
 </style>

@@ -74,4 +74,27 @@ function handleComingSoon() {
 .btn.secondary:hover {
     background: #ccc;
 }
+
+@media (max-width: 640px) {
+    .r-content {
+        width: 100%;
+    }
+
+    .r-content h1 {
+        font-size: 2rem;
+    }
+
+    .r-content h1 .brand {
+        white-space: normal;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        min-height: 2.75rem;
+    }
+}
 </style>

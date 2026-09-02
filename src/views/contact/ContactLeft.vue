@@ -61,4 +61,24 @@
     flex-shrink: 0;
     color: #ccc;
 }
+
+@media (max-width: 640px) {
+    .intro {
+        max-width: 34rem;
+        padding: 0;
+    }
+
+    .intro h1 {
+        font-size: 2rem;
+    }
+
+    .intro p {
+        margin-bottom: 1.5rem;
+    }
+
+    .details li {
+        align-items: flex-start;
+        overflow-wrap: anywhere;
+    }
+}
 </style>

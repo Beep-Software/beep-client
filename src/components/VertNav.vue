@@ -52,8 +52,8 @@ import { notifySuccess } from '@/stores/notificationStore'
 
 const router = useRouter()
 
-function handleLogout() {
-    logout()
+async function handleLogout() {
+    await logout()
     notifySuccess('You have been logged out.')
     router.push('/home')
 }
@@ -104,5 +104,36 @@ function handleLogout() {
 .vert-nav li.logout a:hover {
     background-color: #e53935;
     color: #fff;
+}
+
+@media (max-width: 900px) {
+    .vert-nav {
+        top: 1.5rem;
+        left: 1.5rem;
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .vert-nav {
+        position: absolute;
+        top: 0.75rem;
+        left: 50%;
+        margin: 0;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        transform: translateX(-50%);
+    }
+
+    .vert-nav ul {
+        flex-direction: row;
+        gap: 0.45rem;
+    }
+
+    .vert-nav li a {
+        min-width: 2.25rem;
+        min-height: 2.25rem;
+        padding: 0.45rem;
+    }
 }
 </style>

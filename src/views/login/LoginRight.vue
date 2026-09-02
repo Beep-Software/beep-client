@@ -196,4 +196,26 @@ function handleForgotPassword() {
         transform: rotate(360deg);
     }
 }
+
+@media (max-width: 640px) {
+    .r-content {
+        max-width: none;
+    }
+
+    .login-card {
+        gap: 1.25rem;
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+
+    .row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .btn {
+        min-height: 2.75rem;
+    }
+}
 </style>

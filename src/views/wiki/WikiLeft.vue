@@ -160,4 +160,15 @@ async function handleCreate() {
     background-color: #fff;
     color: #111;
 }
+
+@media (max-width: 640px) {
+    .wiki-nav {
+        max-width: 34rem;
+        padding: 0;
+    }
+
+    .doc-list {
+        max-height: 18rem;
+    }
+}
 </style>

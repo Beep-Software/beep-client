@@ -4,6 +4,42 @@
     <meta charset="UTF-8">
     <link rel="icon" href="/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+      html, body, #app {
+        width: 100%;
+        min-height: 100%;
+        margin: 0;
+      }
+
+      html {
+        background: #181818;
+      }
+
+      body {
+        background: linear-gradient(to right, #181818 0 45%, #eee 45% 100%);
+        color: #fff;
+        font-family: 'Inter', Arial, sans-serif;
+      }
+
+      #app {
+        min-height: 100vh;
+      }
+
+      @media (max-width: 900px) {
+        body {
+          background: linear-gradient(to right, #181818 0 40%, #eee 40% 100%);
+        }
+      }
+
+      @media (max-width: 640px) {
+        body {
+          background: #eee;
+        }
+      }
+    </style>
     <title>BEEP</title>
   </head>
   <body>

@@ -18,8 +18,6 @@ import NotificationManager from './components/NotificationManager.vue'
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
-
 * {
   margin: 0;
   padding: 0;
@@ -27,14 +25,14 @@ import NotificationManager from './components/NotificationManager.vue'
 }
 
 html, body {
-  height: 100%;
+  min-height: 100%;
   font-family: 'Inter', Arial, sans-serif;
-  background: linear-gradient(135deg, #181818 100%, #222 100%);
+  background: linear-gradient(to right, #181818 0 45%, #eee 45% 100%);
   color: #fff;
   border: none;
   outline: none;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 a {
@@ -45,6 +43,18 @@ a {
 ul, ol {
   list-style: none;
 }
+
+@media (max-width: 900px) {
+  html, body {
+    background: linear-gradient(to right, #181818 0 40%, #eee 40% 100%);
+  }
+}
+
+@media (max-width: 640px) {
+  html, body {
+    background: #eee;
+  }
+}
 </style>
 
 <style scoped>
@@ -52,7 +62,8 @@ main {
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 100vh;
+  height: 100dvh;
+  min-height: 100vh;
   overflow: hidden;
 }
 
@@ -64,6 +75,7 @@ main {
   width: 45%;
   height: 100%;
   overflow: hidden;
+  background: #222;
   box-shadow: 2px 0 10px rgba(0,0,0,0.3);
   z-index: 1;
   font-size: 2rem;
@@ -84,5 +96,51 @@ main {
 
 .right > * {
   margin: auto;
+}
+
+@media (max-width: 900px) {
+  .left {
+    width: 40%;
+    padding: 1.5rem 0;
+  }
+
+  .right {
+    width: 60%;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  main {
+    display: block;
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+
+  .left,
+  .right {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+  }
+
+  .left {
+    min-height: 13rem;
+    padding: 5.5rem 1.25rem 2rem;
+    overflow: visible;
+    box-shadow: none;
+    background: linear-gradient(135deg, #181818 0%, #222 100%);
+  }
+
+  .right {
+    display: block;
+    padding: 1.5rem 1.25rem 2rem;
+    overflow: visible;
+  }
+
+  .right > * {
+    margin: 0 auto;
+  }
 }
 </style>

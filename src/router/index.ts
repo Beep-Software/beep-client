@@ -1,5 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { isAuthenticated } from '@/stores/authStore'
+import { ensureSession, hasAnyRole } from '@/stores/authStore'
+
+declare module 'vue-router' {
+  interface RouteMeta {
+    requiresAuth?: boolean
+    requiresRoles?: string[]
+  }
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,7 +38,7 @@ const router = createRouter({
     {
       path: '/admin',
       name: 'Admin',
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresRoles: ['Admin'] },
       components: {
         left: () => import('@/views/admin/AdminLeft.vue'),
         right: () => import('@/views/admin/AdminRight.vue'),
@@ -57,9 +64,13 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to) => {
-  if (to.meta.requiresAuth && !isAuthenticated.value) {
+router.beforeEach(async (to) => {
+  if (to.meta.requiresAuth && !await ensureSession()) {
     return { path: '/login', query: { redirect: to.fullPath } }
+  }
+
+  if (to.meta.requiresRoles && !hasAnyRole(to.meta.requiresRoles)) {
+    return { path: '/home' }
   }
 })
 

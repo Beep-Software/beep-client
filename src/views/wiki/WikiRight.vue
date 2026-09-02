@@ -195,4 +195,34 @@ async function handleDelete() {
 .markdown-body :deep(code) {
     font-family: 'SFMono-Regular', Consolas, monospace;
 }
+
+@media (max-width: 640px) {
+    .r-content {
+        max-width: none;
+    }
+
+    .doc-header {
+        flex-direction: column;
+    }
+
+    .doc-header h1 {
+        font-size: 1.7rem;
+        overflow-wrap: anywhere;
+    }
+
+    .actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .actions .btn {
+        flex: 1 1 5rem;
+        min-height: 2.6rem;
+    }
+
+    .editor {
+        min-height: 55dvh;
+        font-size: 0.9rem;
+    }
+}
 </style>
