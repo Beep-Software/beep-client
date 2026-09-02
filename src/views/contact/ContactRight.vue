@@ -13,14 +13,15 @@
                 <label for="message">Message</label>
                 <textarea id="message" v-model="form.message" rows="5" placeholder="How can we help?" required></textarea>
             </div>
-            <button type="submit" class="btn primary">Send Message</button>
+            <button type="submit" class="btn primary" :class="{ 'loading': isLoading }" :disabled="isLoading">{{ isLoading ? '' : 'Send Message' }}</button>
         </form>
     </div>
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { notifyWarning } from '@/stores/notificationStore'
+import { reactive, computed, ref } from 'vue'
+import { notifyError, notifySuccess } from '@/stores/notificationStore'
+import emailService from '@/services/emailApi'
 
 const form = reactive({
     name: '',
@@ -28,9 +29,28 @@ const form = reactive({
     message: '',
 })
 
-// TODO: wire up to the email API once it's available
-function handleSubmit() {
-    notifyWarning("This form isn't connected to our email system yet — your message wasn't sent.")
+const emailBody = computed(() => `Message from ${form.name} (${form.email}):\n\n${form.message}`)
+
+const isLoading = ref(false)
+
+async function handleSubmit() {
+    isLoading.value = true
+    try {
+        await emailService.sendEmail('bowen61496@gmail.com', `Beep Software: ${form.name}`, emailBody.value)
+        notifySuccess('Email sent successfully.')
+        resetForm()
+    } catch (error) {
+        console.error('Failed to send email:', error)
+        notifyError('Failed to send email. Please try again later.')
+    } finally {
+        isLoading.value = false
+    }
+}
+
+function resetForm() {
+    form.name = ''
+    form.email = ''
+    form.message = ''
 }
 </script>
 
@@ -104,6 +124,32 @@ function handleSubmit() {
 
 .btn.primary:hover {
     background: #333;
+}
+
+.btn.primary.loading {
+    background: #555;
+}
+
+/* loading animation */
+.btn.primary.loading::after {
+    content: '';
+    display: inline-block;
+    margin-left: 0.5rem;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid #fff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @media (max-width: 640px) {
