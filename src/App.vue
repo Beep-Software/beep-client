@@ -51,7 +51,11 @@ ul, ol {
 }
 
 @media (max-width: 640px) {
-  html, body {
+  html {
+    background: #222;
+  }
+
+  body {
     background: #eee;
   }
 }
