@@ -15,6 +15,9 @@
 import { RouterView } from 'vue-router'
 import VertNav from './components/VertNav.vue'
 import NotificationManager from './components/NotificationManager.vue'
+import { useSeo } from './composables/useSeo'
+
+useSeo()
 </script>
 
 <style>
